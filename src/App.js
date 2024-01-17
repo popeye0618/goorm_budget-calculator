@@ -12,6 +12,7 @@ export default function App() {
   const [price, setPrice] = useState("");
   const [sumPrice, setSumPrice] = useState(0);
   const [message, setMessage] = useState({ text: "", color: "", show: false });
+  const [editItem, setEditItem] = useState(null);
 
   const showMessage = (text, color) => {
     setMessage({ text: text, color: color, show: true });
@@ -26,20 +27,32 @@ export default function App() {
   }, [items]);
 
   const handleSubmit = (e) => {
-    if (!title.trim() || isNaN(price) || Number(price) <= 0) {
-      return;
+    if (editItem) {
+      setItems(
+        items.map((item) =>
+          item.id === editItem.id
+            ? { ...item, title: title, price: price }
+            : item
+        )
+      );
+      showMessage("아이템이 수정되었습니다", "#4AAE51");
+      setEditItem(null);
+    } else {
+      if (!title.trim() || isNaN(price) || Number(price) <= 0) {
+        return;
+      }
+
+      let newItem = {
+        id: Date.now(),
+        title: title,
+        price: price,
+      };
+
+      setItems((prev) => [newItem, ...prev]);
+      showMessage("아이템이 생성되었습니다", "#4AAE51");
     }
-
-    let newItem = {
-      id: Date.now(),
-      title: title,
-      price: price,
-    };
-
-    setItems((prev) => [newItem, ...prev]);
     setTitle("");
     setPrice("");
-    showMessage("아이템이 생성되었습니다", "#4AAE51");
   };
 
   const handleRemoveAll = () => {
@@ -51,6 +64,15 @@ export default function App() {
     let newItems = items.filter((items) => items.id !== id);
     setItems(newItems);
     showMessage("아이템이 삭제되었습니다", "#C55150");
+  };
+
+  const handleEdit = (id) => {
+    const itemToEdit = items.find((item) => item.id === id);
+    if (itemToEdit) {
+      setEditItem(itemToEdit);
+      setTitle(itemToEdit.title);
+      setPrice(itemToEdit.price);
+    }
   };
 
   return (
@@ -72,14 +94,14 @@ export default function App() {
             handleSubmit={handleSubmit}
           />
           <Btn
-            text={"제출"}
+            text={editItem ? "수정" : "제출"}
             icon={<GoPaperAirplane />}
             handleSubmit={handleSubmit}
           />
           <Lists
             items={items}
-            setItems={setItems}
             handleRemove={handleRemove}
+            handleEdit={handleEdit}
           />
           <Btn
             text={"목록 지우기"}

@@ -2,7 +2,7 @@ import React from "react";
 
 const Btn = ({ text, icon, handleSubmit, handleRemoveAll }) => {
   const handleClick = () => {
-    if (text === "제출") {
+    if (text === "제출" || text === "수정") {
       handleSubmit();
     } else if (text === "목록 지우기") {
       handleRemoveAll();

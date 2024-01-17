@@ -1,7 +1,7 @@
 import React from "react";
 import List from "./List";
 
-const Lists = ({ items, setItems, handleRemove }) => {
+const Lists = ({ items, handleRemove, handleEdit }) => {
   return (
     <div>
       {items.map((data) => (
@@ -10,9 +10,8 @@ const Lists = ({ items, setItems, handleRemove }) => {
           id={data.id}
           title={data.title}
           price={data.price}
-          items={items}
-          setItems={setItems}
           handleRemove={handleRemove}
+          handleEdit={handleEdit}
         />
       ))}
     </div>
